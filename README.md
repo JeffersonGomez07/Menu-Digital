@@ -1,129 +1,259 @@
-Aplicación de Menú Digital y Pedidos
+Descripción general
 
-Aplicación web de menú digital interactivo orientada a restaurantes y pequeños negocios, diseñada para que los clientes puedan visualizar productos, agregarlos a un carrito y realizar pedidos de forma rápida y sencilla.
+Este proyecto es un sistema de menú digital pensado para restaurantes y sodas, que permite a los clientes acceder al menú mediante un código QR, visualizar productos de forma clara y moderna, realizar pedidos desde el celular y enviarlos por WhatsApp.
+Al mismo tiempo, el negocio cuenta con un panel administrativo para gestionar y dar seguimiento a los pedidos en tiempo real.
 
-El proyecto está enfocado en experiencia de usuario (UX), claridad visual y flujo directo al pedido, priorizando funcionalidad sobre elementos decorativos innecesarios.
+El sistema está dividido en tres partes principales:
 
-🚀 Tecnologías utilizadas
-Frontend
+Backend (API y base de datos)
+
+Menú público para clientes (Next.js)
+
+Panel de administración (React)
+
+Tecnologías utilizadas
+Backend
+
+Node.js
+
+Express
+
+PostgreSQL
+
+UUID
+
+API REST
+
+Frontend cliente
 
 Next.js
 
 React
 
-CSS personalizado
+CSS moderno
 
-JavaScript (ES6+)
+Mobile-first design
 
-Herramientas
+Panel administrador
 
-Git & GitHub
+React
 
-Visual Studio Code
+CSS
 
-Vercel (deploy)
+Fetch API
 
-🎯 Funcionalidades principales
+Arquitectura del proyecto
 
-📋 Visualización clara del menú por categorías
+El proyecto sigue una arquitectura separada por responsabilidades, lo que facilita su mantenimiento, escalabilidad y comprensión.
 
-🍔 Listado de productos con imagen, descripción y precio
+Backend
+Estructura de carpetas
+backend/
+ └── src/
+     ├── config/
+     │   └── db.js
+     ├── controllers/
+     │   ├── menu.controller.js
+     │   ├── orders.controller.js
+     │   └── qr.controller.js
+     ├── middleware/
+     ├── models/
+     ├── public/
+     │   ├── products/
+     │   └── qr/
+     ├── routes/
+     │   ├── business.routes.js
+     │   ├── menu.routes.js
+     │   ├── orders.routes.js
+     │   ├── public.routes.js
+     │   └── qr.generate.routes.js
+     ├── utils/
+     │   └── qr.js
+     ├── app.js
+     └── server.js
 
-➕ Agregar y quitar productos del carrito
+Modelo de datos
 
-🛒 Carrito de compras interactivo
+La base de datos se llama menu_digital.
 
-💰 Cálculo automático del total del pedido
+Tabla businesses
 
-📱 Diseño responsive (mobile-first)
+id (UUID, PK)
 
-📲 Opción de envío del pedido vía WhatsApp
+name (TEXT)
 
-⚡ Interfaz rápida, limpia y enfocada en la acción principal: ordenar
+slug (TEXT, UNIQUE)
 
-🧠 Decisiones de diseño y UX
+address (TEXT)
 
-Se eliminaron banners promocionales y reseñas para no distraer al usuario.
+phone (TEXT)
 
-El objetivo principal es reducir fricción entre:
+logo_url (TEXT)
 
-ver menú → elegir productos → realizar pedido
+created_at (TIMESTAMP)
 
-La jerarquía visual prioriza:
+Tabla categories
 
-Producto
+id (UUID, PK)
 
-Precio
+business_id (UUID, FK)
 
-Acción (Agregar al carrito)
+name (TEXT)
 
-Estas decisiones reflejan un enfoque orientado a producto real, no solo a diseño visual.
+created_at (TIMESTAMP)
 
-📂 Estructura del proyecto
-/app
- ├── components
- │   ├── ProductCard.jsx
- │   ├── Cart.jsx
- │   └── CategorySection.jsx
- ├── styles
- │   └── menu.css
- ├── page.jsx
- └── layout.jsx
+Tabla products
+
+id (UUID, PK)
+
+category_id (UUID, FK)
+
+name (TEXT)
+
+description (TEXT)
+
+price (NUMERIC)
+
+image_url (TEXT)
+
+available (BOOLEAN)
+
+created_at (TIMESTAMP)
+
+Tabla orders
+
+id (SERIAL, PK)
+
+business_id (UUID, FK)
+
+products (JSONB)
+
+total (NUMERIC)
+
+status (VARCHAR)
+
+created_at (TIMESTAMP)
+
+Funcionalidad clave del backend
+
+Endpoint público del menú por slug:
+
+GET /api/menu/:slug
 
 
-El código está organizado de forma modular para facilitar mantenimiento y escalabilidad.
+Generación de códigos QR:
 
-▶️ Instalación y ejecución local
-
-Clonar el repositorio:
-
-git clone https://github.com/tu-usuario/menu-digital
+GET /api/qr/generate/:businessId
 
 
-Instalar dependencias:
+Gestión de pedidos:
 
-npm install
+Crear pedido
 
+Listar pedidos
 
-Ejecutar el proyecto:
+Actualizar estado
 
-npm run dev
+Eliminar pedido con validaciones
 
+Los controladores se encargan únicamente de la lógica de negocio y respuesta, mientras que las rutas definen las URLs públicas del sistema.
 
-Abrir en el navegador:
+Menú público (cliente)
+Estructura
+menu-client/
+ └── app/
+     └── menu/
+         └── [slug]/
+             ├── loading.js
+             ├── menu.css
+             ├── MenuPageClient.jsx
+             └── page.js
+ └── public/
+     └── fondo/
+         └── fondo.png
 
-http://localhost:3000
+Características del menú
 
-🌐 Demo en producción
+Acceso mediante QR
 
-🔗 Demo en Vercel
+URL pública y limpia
 
-(reemplaza con tu link real)
+Diseño mobile-first
 
-📌 Posibles mejoras futuras
+Categorías separadas
 
-Panel de administración para negocios
+Cards de productos con imagen, nombre, descripción y precio
 
-Gestión dinámica de productos y categorías
+Skeleton loader durante la carga
 
-Integración con backend (API / Base de Datos)
+Carrito de compras
 
-Historial de pedidos
+Envío del pedido por WhatsApp
 
-Autenticación de usuarios
+Persistencia del carrito usando estado del cliente
 
-Métodos de pago en línea
+URL del menú público
+http://localhost:3000/menu/restaurante-el-pueblo
 
-👤 Autor
+Panel de administración
+Estructura
+admin-panel/
+ └── src/
+     ├── pages/
+     │   └── Orders.jsx
+     ├── utils/
+     └── styles/
+         └── Orders.css
 
-Jeff
-Desarrollador Web / Full Stack Junior
-📍 Costa Rica
+Funcionalidades del panel admin
 
-GitHub: https://github.com/tu-usuario
+Visualización de pedidos
 
-LinkedIn: https://linkedin.com/in/tu-perfil
+Información del negocio
 
-💬 Nota final
+Productos y cantidades
 
-Este proyecto fue desarrollado como una aplicación funcional y realista, aplicando buenas prácticas de frontend, UX y estructura de código, con enfoque en un caso de uso real para restaurantes.
+Total del pedido
+
+Fecha y hora
+
+Estados del pedido:
+
+pendiente
+
+confirmado
+
+preparacion
+
+enviado
+
+cancelado
+
+Validación del flujo de estados
+
+Eliminación de pedidos solo cuando el estado lo permite
+
+Orden automático por fecha
+
+URL del panel administrador
+http://localhost:3001/orders
+
+Flujo completo del sistema
+
+El negocio genera un QR desde el backend.
+
+El QR apunta al menú público del negocio.
+
+El cliente escanea el QR desde su celular.
+
+Visualiza el menú y agrega productos al carrito.
+
+Envía el pedido por WhatsApp.
+
+El pedido se guarda en la base de datos.
+
+El administrador gestiona el pedido desde el panel admin.
+
+Estado del proyecto
+
+Proyecto funcional y completo, desarrollado como un sistema real de menú digital con gestión de pedidos, listo para ser presentado en portafolio profesional.
