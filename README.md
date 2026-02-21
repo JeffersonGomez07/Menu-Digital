@@ -256,4 +256,4 @@ El administrador gestiona el pedido desde el panel admin.
 
 Estado del proyecto
 
-Proyecto funcional y completo, desarrollado como un sistema real de menú digital con gestión de pedidos, listo para ser presentado en portafolio profesional.
+Proyecto funcional y completo, desarrollado como un sistema real de menú digital con gestión de pedidos.
